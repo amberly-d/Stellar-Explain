@@ -1,5 +1,6 @@
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { homedir } from "os";
 
 export interface CliConfig {
   url?: string;
@@ -13,7 +14,7 @@ const ALLOWED_KEYS = new Set(["url", "token", "timeout", "color"]);
 export function loadConfig(filePath?: string): CliConfig {
   const candidates = filePath
     ? [filePath]
-    : [join(process.cwd(), ".stellar-explain.json"), join(require("os").homedir(), ".stellar-explain.json")];
+    : [join(process.cwd(), ".stellar-explain.json"), join(homedir(), ".stellar-explain.json")];
 
   for (const candidate of candidates) {
     if (!existsSync(candidate)) continue;

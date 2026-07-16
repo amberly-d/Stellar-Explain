@@ -28,20 +28,17 @@ async function fetchEndpoint(path: string, flags: GlobalFlags): Promise<ApiRespo
 /** Explain a transaction by hash. */
 export async function txCommand(hash: string, flags: GlobalFlags): Promise<void> {
   const data = await fetchEndpoint(`/tx/${hash}`, flags);
-  // eslint-disable-next-line no-console
   console.log(flags.json ? JSON.stringify(data, null, 2) : data.summary);
 }
 
 /** Explain an account by ID. */
 export async function accountCommand(id: string, flags: GlobalFlags): Promise<void> {
   const data = await fetchEndpoint(`/account/${id}`, flags);
-  // eslint-disable-next-line no-console
   console.log(flags.json ? JSON.stringify(data, null, 2) : data.summary);
 }
 
 /** Check service health. */
 export async function healthCommand(flags: GlobalFlags): Promise<void> {
   const data = await fetchEndpoint("/health", flags);
-  // eslint-disable-next-line no-console
   console.log(flags.json ? JSON.stringify(data, null, 2) : data.status);
 }

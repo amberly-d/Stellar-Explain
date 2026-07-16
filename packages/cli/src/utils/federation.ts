@@ -5,7 +5,7 @@ export function isFederationAddress(input: string): boolean {
 }
 
 export function parseFederationAddress(input: string): { user: string; domain: string } {
-  const [user, domain] = input.split("*");
+  const [user = "", domain = ""] = input.split("*");
   return { user, domain };
 }
 

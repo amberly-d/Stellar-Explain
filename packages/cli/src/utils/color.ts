@@ -6,6 +6,7 @@ export function isColorEnabled(flags: { noColor?: boolean } = {}): boolean {
 }
 
 export function stripColor(text: string): string {
+  // eslint-disable-next-line no-control-regex -- matches literal ANSI escape sequences
   return text.replace(/\x1B\[[0-9;]*m/g, "");
 }
 

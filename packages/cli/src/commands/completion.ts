@@ -13,20 +13,20 @@ _stellar_explain_completions() {
 
   case "\${prev}" in
     stellar-explain)
-      COMPREPLY=( \$(compgen -W "\${commands}" -- "\${cur}") )
+      COMPREPLY=( $(compgen -W "\${commands}" -- "\${cur}") )
       return ;;
     history)
-      COMPREPLY=( \$(compgen -W "\${history_subcommands} --limit --kind" -- "\${cur}") )
+      COMPREPLY=( $(compgen -W "\${history_subcommands} --limit --kind" -- "\${cur}") )
       return ;;
     completion)
-      COMPREPLY=( \$(compgen -W "\${completion_shells}" -- "\${cur}") )
+      COMPREPLY=( $(compgen -W "\${completion_shells}" -- "\${cur}") )
       return ;;
     --kind)
-      COMPREPLY=( \$(compgen -W "tx account" -- "\${cur}") )
+      COMPREPLY=( $(compgen -W "tx account" -- "\${cur}") )
       return ;;
   esac
 
-  COMPREPLY=( \$(compgen -W "\${commands} \${global_flags}" -- "\${cur}") )
+  COMPREPLY=( $(compgen -W "\${commands} \${global_flags}" -- "\${cur}") )
 }
 
 complete -F _stellar_explain_completions stellar-explain
@@ -46,7 +46,7 @@ _stellar_explain() {
     '1: :->command' \\
     '*: :->args'
 
-  case \$state in
+  case $state in
     command)
       local commands=(
         'tx:Look up a Stellar transaction'
@@ -57,7 +57,7 @@ _stellar_explain() {
       _describe 'command' commands
       ;;
     args)
-      case \$words[2] in
+      case $words[2] in
         history)
           local history_args=(
             'clear:Delete the local history file'

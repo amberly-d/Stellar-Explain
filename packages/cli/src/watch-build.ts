@@ -28,7 +28,7 @@ export function isTscAvailable(cwd: string = process.cwd()): boolean {
 }
 
 export function resolveOutDir(tsconfigPath: string): string {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const cfg = require(path.resolve(tsconfigPath)) as {
     compilerOptions?: { outDir?: string };
   };
