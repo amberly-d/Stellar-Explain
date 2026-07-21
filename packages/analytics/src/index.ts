@@ -1,1 +1,1 @@
-export {};
+export { AnalyticsEvent } from "./types/events";
