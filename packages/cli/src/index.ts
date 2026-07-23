@@ -1,8 +1,8 @@
 import { Command } from 'commander';
-import { CLI_VERSION, DEFAULT_BASE_URL } from './config/env.js';
+import { CLI_VERSION, DEFAULT_BASE_URL, isUpdateCheckDisabled } from './config/env.js';
 import { ApiClient } from './client/api.js';
 import { cacheGet, cacheSet } from './utils/cache.js';
-import { registerBatchCommand } from './commands/batch.js';
+import { checkForUpdate, getUpdateNotice } from './utils/update-check.js';
 
 const program = new Command();
 
@@ -10,7 +10,8 @@ program
   .name('stellar-explain')
   .description('Query the Stellar Explain backend from your terminal')
   .version(CLI_VERSION)
-  .option('--url <url>', 'Backend URL', DEFAULT_BASE_URL);
+  .option('--url <url>', 'Backend URL', DEFAULT_BASE_URL)
+  .option('--no-update-check', 'Disable background update check');
 
 program
   .command('tx <hash>')
@@ -53,6 +54,38 @@ program
     console.log(JSON.stringify(data, null, 2));
   });
 
-registerBatchCommand(program);
+program
+  .command('batch <file>')
+  .description('Process a batch of lookups from a JSON file')
+  .action(async (file: string, opts: { parent: { opts: { url: string } } }) => {
+    const fs = await import('node:fs');
+    const content = fs.readFileSync(file, 'utf-8');
+    const items = JSON.parse(content) as Array<{ type: string; identifier: string }>;
+    const client = new ApiClient(opts.parent.opts.url);
+
+    for (const item of items) {
+      try {
+        let data: unknown;
+        if (item.type === 'tx') {
+          data = await client.explainTx(item.identifier);
+        } else if (item.type === 'account') {
+          data = await client.explainAccount(item.identifier);
+        } else {
+          console.error(`Unknown type: ${item.type}`);
+          continue;
+        }
+        console.log(JSON.stringify({ type: item.type, identifier: item.identifier, result: data }, null, 2));
+      } catch (err) {
+        console.error(`Failed: ${item.type} ${item.identifier}: ${err}`);
+      }
+    }
+  });
+
+if (program.opts().updateCheck && !isUpdateCheckDisabled()) {
+  checkForUpdate().then(() => {
+    const notice = getUpdateNotice();
+    if (notice) console.error(notice);
+  });
+}
 
 program.parse();

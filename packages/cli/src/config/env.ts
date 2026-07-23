@@ -13,3 +13,7 @@ export function getCacheDir(): string {
 export function getHistoryFile(): string {
   return path.join(getCacheDir(), 'history.json');
 }
+
+export function isUpdateCheckDisabled(): boolean {
+  return process.env.NO_UPDATE_CHECK === '1';
+}
