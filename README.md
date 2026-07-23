@@ -123,4 +123,3 @@ We value:
 - clarity over cleverness
 - small, meaningful contributions
 - respectful collaboration
-
