@@ -1,7 +1,8 @@
 import { Command } from 'commander';
-import { CLI_VERSION, DEFAULT_BASE_URL } from './config/env.js';
+import { CLI_VERSION, DEFAULT_BASE_URL, isUpdateCheckDisabled } from './config/env.js';
 import { ApiClient } from './client/api.js';
 import { cacheGet, cacheSet } from './utils/cache.js';
+import { checkForUpdate, getUpdateNotice } from './utils/update-check.js';
 
 const program = new Command();
 
@@ -9,7 +10,8 @@ program
   .name('stellar-explain')
   .description('Query the Stellar Explain backend from your terminal')
   .version(CLI_VERSION)
-  .option('--url <url>', 'Backend URL', DEFAULT_BASE_URL);
+  .option('--url <url>', 'Backend URL', DEFAULT_BASE_URL)
+  .option('--no-update-check', 'Disable background update check');
 
 program
   .command('tx <hash>')
@@ -78,5 +80,12 @@ program
       }
     }
   });
+
+if (program.opts().updateCheck && !isUpdateCheckDisabled()) {
+  checkForUpdate().then(() => {
+    const notice = getUpdateNotice();
+    if (notice) console.error(notice);
+  });
+}
 
 program.parse();

@@ -13,10 +13,9 @@ function ensureCacheDir(): void {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-  } catch (err) {
+  } catch {
     diskCacheAvailable = false;
-    const reason = err instanceof Error ? err.message : String(err);
-    console.warn(`Warning: Could not create cache directory "${dir}" (${reason}). Falling back to in-memory cache.`);
+    console.warn('Warning: Could not create cache directory, using in-memory cache');
   }
 }
 

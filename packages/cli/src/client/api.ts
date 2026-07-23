@@ -1,3 +1,5 @@
+import { warnInsecureUrl } from '../config/validate.js';
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
@@ -8,6 +10,7 @@ export class ApiClient {
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl.replace(/\/$/, '');
+    warnInsecureUrl(this.baseUrl);
   }
 
   async get<T>(endpoint: string): Promise<T> {
